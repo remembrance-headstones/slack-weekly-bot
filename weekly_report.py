@@ -49,20 +49,23 @@ def generate_report():
     by_user = Counter()
     by_channel = Counter()
 
-    for ch in list_channels():
-        msgs = channel_messages(ch["id"], oldest)
-        clean_msgs = []
-        for m in msgs:
-            # skip bot/app messages (HubSpot, integrations, our own posts)
-            if m.get("subtype") == "bot_message" or m.get("bot_id") or m.get("app_id"):
-                continue
-            clean_msgs.append(m)
+for ch in list_channels():
+    msgs = channel_messages(ch["id"], oldest)
+    clean_msgs = []
 
-            u = m.get("user")
-            if u in users:
-                by_user[u] += 1
+    for m in msgs:
+        # skip bot/app messages (HubSpot, integrations, our own posts)
+        if m.get("subtype") == "bot_message" or m.get("bot_id") or m.get("app_id"):
+            continue
 
-        by_channel[ch["name"]] += len(clean_msgs)
+        clean_msgs.append(m)
+
+        u = m.get("user")
+        if u in users:
+            by_user[u] += 1
+
+    # count only clean (non-bot) messages
+    by_channel[ch["name"]] += len(clean_msgs)
 
     total_msgs = sum(by_channel.values())
     top_users = [(users[u]["profile"].get("real_name") or users[u]["name"], c)
