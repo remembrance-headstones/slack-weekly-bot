@@ -5,6 +5,8 @@ from collections import Counter
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
+# bump: redeploy to pick new env — 1
+
 client = WebClient(token=os.environ["SLACK_BOT_TOKEN"])
 channel_id = os.environ.get("SLACK_CHANNEL_ID", "D09KW4FTQ1E")
 
@@ -147,3 +149,4 @@ def post_to_slack(text):
 if __name__ == "__main__":
     text = generate_report()
     post_to_slack(text)
+
